@@ -8,4 +8,5 @@ class WordReplacerApplication
 
 fun main(args: Array<String>) {
 	runApplication<WordReplacerApplication>(*args)
+
 }

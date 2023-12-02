@@ -1,0 +1,10 @@
+version: '3.3'
+services:
+  word-replacer:
+    container_name: word-replacer
+    restart: always
+    ports:
+      - "8080:8080"
+    build: 
+      context: .
+      dockerfile: Dockerfile
