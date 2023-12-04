@@ -10,6 +10,7 @@ class ControllerAdvise {
 
     @ExceptionHandler
     fun handleException(exception: Exception): Response<String> {
-        return Response(exception.message?: "", HttpStatus.BAD_REQUEST)
+        exception.printStackTrace()
+        return Response("${exception.message}"?: "", HttpStatus.BAD_REQUEST)
     }
 }

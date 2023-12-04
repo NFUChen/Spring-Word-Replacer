@@ -2,29 +2,41 @@ package com.zona.wordReplacer.entity.auth
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
-import java.util.UUID
+
+data class MemberView(
+    val name: String?,
+    val email: String?,
+    val memberId: Long?,
+    val roles: List<String>
+)
 
 @Entity
 @Table(name = "member")
 class Member(
     @Column(name = "name", unique = true, nullable = false)
-    val name: String,
+    var name: String?,
     @Column(name = "email", unique =  true, nullable = false)
-    val email: String,
-    @Column(name = "password", columnDefinition = "CHAR(68)", nullable = false)
-    val password: String,
+    var email: String?,
+    @Column(name = "password", columnDefinition = "VARCHAR(68)", nullable = false)
+    var password: String?,
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id", nullable = false)
-    val memberId: Long? = null,
+    val id: Long? = null,
 
     @JsonIgnore
     @OneToMany(targetEntity = Role::class, cascade = [CascadeType.ALL], mappedBy = "member")
-    val roles: MutableList<Role> = mutableListOf(),
-
-
-
+    var roles: MutableList<Role> = mutableListOf(),
 ) {
+
+    fun toView(): MemberView {
+        return MemberView(
+            name,
+            email,
+            id,
+            roles.map { it.role }
+        )
+    }
 
 }

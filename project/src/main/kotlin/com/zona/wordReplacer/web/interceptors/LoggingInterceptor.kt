@@ -10,7 +10,6 @@ import java.lang.Exception
 class LoggingInterceptor: HandlerInterceptor {
     val logger = LoggerFactory.getLogger(this::class.java)
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
-        logger.info("${request.method} ${request.requestURI}")
         return true
     }
 
@@ -20,7 +19,7 @@ class LoggingInterceptor: HandlerInterceptor {
         handler: Any,
         modelAndView: ModelAndView?
     ) {
-        super.postHandle(request, response, handler, modelAndView)
+        logger.info("${response.status} ${request.method} ${request.requestURL}")
     }
 
     override fun afterCompletion(
