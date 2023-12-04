@@ -1,4 +1,4 @@
-package com.zona.wordReplacer.entity
+package com.zona.wordReplacer.entity.encoder
 
 import jakarta.persistence.*
 import java.util.*

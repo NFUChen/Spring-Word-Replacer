@@ -1,9 +1,9 @@
-package com.zona.wordReplacer.web
+package com.zona.wordReplacer.controller
 
-import com.zona.wordReplacer.entity.LegalWord
-import com.zona.wordReplacer.entity.LegalWordView
-import com.zona.wordReplacer.entity.SensitiveWord
+import com.zona.wordReplacer.entity.encoder.LegalWord
+import com.zona.wordReplacer.entity.encoder.LegalWordView
 import com.zona.wordReplacer.service.EncoderService
+import com.zona.wordReplacer.web.Response
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import java.util.*

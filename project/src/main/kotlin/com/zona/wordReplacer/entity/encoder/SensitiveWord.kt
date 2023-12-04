@@ -1,4 +1,4 @@
-package com.zona.wordReplacer.entity
+package com.zona.wordReplacer.entity.encoder
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*

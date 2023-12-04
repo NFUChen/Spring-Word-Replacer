@@ -1,9 +1,7 @@
 package com.zona.wordReplacer.service
 
-import com.zona.wordReplacer.entity.LegalWord
-import com.zona.wordReplacer.entity.LegalWordView
-import com.zona.wordReplacer.entity.SensitiveWord
-import com.zona.wordReplacer.entity.SensitiveWordView
+import com.zona.wordReplacer.entity.encoder.LegalWord
+import com.zona.wordReplacer.entity.encoder.SensitiveWord
 import com.zona.wordReplacer.repository.LegalWordRepository
 import com.zona.wordReplacer.repository.SensitiveWordRepository
 import org.springframework.stereotype.Service

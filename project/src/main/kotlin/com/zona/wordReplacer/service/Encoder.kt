@@ -1,6 +1,6 @@
 package com.zona.wordReplacer.service
-import com.zona.wordReplacer.entity.LegalWordView
-import com.zona.wordReplacer.entity.SensitiveWordView
+import com.zona.wordReplacer.entity.encoder.LegalWordView
+import com.zona.wordReplacer.entity.encoder.SensitiveWordView
 
 class EncoderView(
     val content: String,
