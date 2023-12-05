@@ -5,9 +5,10 @@ import com.zona.wordReplacer.entity.encoder.SensitiveWord
 import com.zona.wordReplacer.repository.LegalWordRepository
 import com.zona.wordReplacer.repository.SensitiveWordRepository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
 
-
+@Transactional
 @Service
 class EncoderService(
     val sensitiveWordRepository: SensitiveWordRepository,

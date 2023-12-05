@@ -26,7 +26,7 @@ class Member(
     val id: Long? = null,
 
     @JsonIgnore
-    @OneToMany(targetEntity = Role::class, cascade = [CascadeType.ALL], mappedBy = "member")
+    @OneToMany(targetEntity = Role::class, cascade = [CascadeType.ALL], mappedBy = "member", fetch = FetchType.EAGER)
     var roles: MutableList<Role> = mutableListOf(),
 ) {
 
@@ -37,6 +37,10 @@ class Member(
             id,
             roles.map { it.role }
         )
+    }
+
+    fun isRole(role: UserRole): Boolean {
+        return roles.map { it.role }.contains(role.roleName)
     }
 
 }

@@ -4,9 +4,9 @@ import jakarta.persistence.*
 import java.util.UUID
 
 enum class UserRole(val roleName: String) {
-    GUEST("ROLE_GUEST"),
-    USER("ROLE_USER"),
-    ADMIN("ROLE_ADMIN");
+    GUEST("GUEST"),
+    USER("USER"),
+    ADMIN("ADMIN");
 
     companion object {
         fun fromString(roleName: String): UserRole {
@@ -27,7 +27,7 @@ class Role(
     @Column(name = "role")
     val role: String,
 
-    @ManyToOne(targetEntity = Member::class)
+    @ManyToOne(targetEntity = Member::class, fetch = FetchType.EAGER)
     @JoinColumn(name = "member_id", referencedColumnName = "member_id")
     val member: Member,
 

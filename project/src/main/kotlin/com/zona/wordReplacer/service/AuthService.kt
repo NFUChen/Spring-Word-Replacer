@@ -4,9 +4,10 @@ import com.zona.wordReplacer.repository.MemberRepository
 import org.slf4j.LoggerFactory
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
 
-
+@Transactional
 @Service
 class AuthService(
     val encoder: BCryptPasswordEncoder,
@@ -65,4 +66,14 @@ class AuthService(
     fun isValidSessionId(sessionId: String): Boolean {
         return sessionPool.containsKey(sessionId)
     }
+
+    fun getMemberId(sessionId: String): Long {
+        return sessionPool.get(sessionId) ?: throw IllegalArgumentException("Session ID: $sessionId not found")
+    }
+
+    fun isSelf(sessionId: String, chckedMemberId: Long): Boolean {
+        return getMemberId(sessionId) == chckedMemberId
+    }
+
+
 }

@@ -9,6 +9,8 @@ import com.zona.wordReplacer.repository.RoleRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
+
+@Transactional
 @Service
 class MemberService(
     val memberRepository: MemberRepository,
@@ -28,8 +30,13 @@ class MemberService(
         return optionalMember.get()
     }
 
-    @Transactional
-    fun addMemberAsGuest(member: Member): MemberView {
+    fun signUpNewMember(member: Member): MemberView {
+
+        val encodedPassword = authService.encodePassword(
+            member.password ?: throw IllegalArgumentException("Password for encoding can not be null")
+        )
+        member.password = encodedPassword
+
         if (isMemberExistByEmail(member.email)) {
             throw IllegalArgumentException("Member email: ${member.email} already exists")
         }
@@ -42,8 +49,6 @@ class MemberService(
     }
 
 
-
-    @Transactional
     fun updateMemberById(memberId: Long,updatedMember: Member): Member {
         val member = findMemberById(memberId)
 
@@ -54,7 +59,6 @@ class MemberService(
         return member
     }
 
-    @Transactional
     fun updateMemberRolesById(memberId: Long, roleStrings: Iterable<String>): Member {
         roleRepository.deleteByMemberId(memberId)
 

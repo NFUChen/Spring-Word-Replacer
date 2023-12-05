@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
 @RestController
-@RequestMapping("/api/sensitive_words")
+@RequestMapping("/api/admin/sensitive_words")
 class SensitiveWordController(
     val encoderService: EncoderService
 ) {

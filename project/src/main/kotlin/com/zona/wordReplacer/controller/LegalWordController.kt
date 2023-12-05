@@ -10,7 +10,7 @@ import java.util.*
 
 
 @RestController
-@RequestMapping("/api/legal_words")
+@RequestMapping("/api/admin/legal_words")
 class LegalWordController(
     val encoderService: EncoderService
 ) {

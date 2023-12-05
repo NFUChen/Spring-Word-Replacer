@@ -11,10 +11,11 @@ import org.springframework.web.bind.annotation.RestController
 
 
 @RestController
-@RequestMapping("/api/encoder")
+@RequestMapping("/api/public/encoder")
 class EncoderController(
     val encoderService: EncoderService
 ) {
+
     @PostMapping("/encode")
     fun encode(@RequestBody encoderRequest: EncoderRequest): Response<ArrayList<EncoderView>> {
         return Response(encoderService.encode(encoderRequest.content))
