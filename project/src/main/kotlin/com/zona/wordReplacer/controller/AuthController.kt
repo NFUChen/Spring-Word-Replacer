@@ -1,6 +1,8 @@
 package com.zona.wordReplacer.controller
 
+import com.zona.wordReplacer.entity.auth.MemberView
 import com.zona.wordReplacer.service.AuthService
+import com.zona.wordReplacer.service.MemberService
 import com.zona.wordReplacer.web.Response
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
@@ -20,7 +22,8 @@ data class LoginForm(
 @RestController
 @RequestMapping("/api")
 class AuthController(
-    val authService: AuthService
+    val authService: AuthService,
+    val memberService: MemberService
 ) {
     @PostMapping("/login")
     fun login(@RequestBody form: LoginForm, request: HttpServletRequest ,response: HttpServletResponse): Response<String> {
@@ -47,8 +50,19 @@ class AuthController(
             it.name == authService.KEY
         }
         targetCookie?.maxAge = -1
-        authService.logout(targetCookie?.value ?: "")
+        authService.logout(targetCookie?.value!!)
         return Response("Logout successfully", HttpStatus.ACCEPTED)
+    }
+
+
+    @GetMapping("/user")
+    fun getUserId(request: HttpServletRequest): Response<MemberView> {
+        val targetCookie = request.cookies?.find {
+            it.name == authService.KEY
+        }
+        val memberId = authService.getMemberId(targetCookie?.value!!)
+        val member = memberService.findMemberById(memberId)
+        return Response(member.toView())
     }
 
 
