@@ -15,21 +15,15 @@ class CorsConfig {
         val config = CorsConfiguration()
 
         // Allow requests from these origins
-        config.addAllowedOrigin("/**")
+        config.addAllowedOriginPattern("*")
         // You can add more origins as needed
 
         // Allow specific headers
-        config.addAllowedHeader("Origin")
-        config.addAllowedHeader("Content-Type")
-        config.addAllowedHeader("Accept")
-        config.addAllowedHeader("Authorization")
+        config.addAllowedHeader("*")
         // You can add more headers as needed
 
         // Allow specific HTTP methods (GET, POST, PUT, etc.)
-        config.addAllowedMethod("GET")
-        config.addAllowedMethod("POST")
-        config.addAllowedMethod("PUT")
-        config.addAllowedMethod("DELETE")
+        config.addAllowedMethod("*")
         // You can add more methods as needed
 
         // Allow credentials (cookies)
