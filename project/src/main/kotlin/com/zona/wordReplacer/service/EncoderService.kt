@@ -59,7 +59,7 @@ class EncoderService(
         val contentSet = contents.toSet()
 
         if (contentSet.size != contents.toList().size) {
-            throw IllegalArgumentException("Original contents contains duplicates")
+            throw IllegalArgumentException("Original contents: ${contents} contain duplicates")
         }
 
         sensitiveWord.legalWords.forEach {
