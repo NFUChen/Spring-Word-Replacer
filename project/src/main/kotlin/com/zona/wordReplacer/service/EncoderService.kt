@@ -42,16 +42,29 @@ class EncoderService(
     }
 
     fun addSensitiveWord(content: String): SensitiveWord {
+
+        if (sensitiveWordRepository.existsByContent(content)) {
+            throw IllegalArgumentException("${content} already found in existing sensitive words")
+        }
+
         val word = SensitiveWord(content)
+
+
         sensitiveWordRepository.save(word)
         return word
     }
 
     fun addLegalWords(sensitiveWordId: UUID, contents: Iterable<String>): Iterable<LegalWord> {
-        // checking duplicates
-
-
         val sensitiveWord = findSensitiveWordById(sensitiveWordId)
+        val contentSet = contents.toSet()
+
+        sensitiveWord.legalWords.forEach {
+            if (it.content in contentSet) {
+                throw IllegalArgumentException("${it.content} already found in existing sensitive word: ${sensitiveWord.content}")
+            }
+        }
+
+
         val legalWords = contents.mapIndexed {
             index: Int, content: String ->  LegalWord(sequence = index, content= content)
         }
@@ -79,11 +92,7 @@ class EncoderService(
     }
 
     fun updateLegalWords(sensitiveWordId: UUID,legalWordViews: Iterable<LegalWordView>): Iterable<LegalWord> {
-        val optionalSensitiveWord = sensitiveWordRepository.findById(sensitiveWordId)
-        if (optionalSensitiveWord.isEmpty) {
-            throw IllegalArgumentException("Unable to find sensitive word: ${sensitiveWordId}")
-        }
-        val sensitiveWord = optionalSensitiveWord.get()
+       val sensitiveWord = findSensitiveWordById(sensitiveWordId)
 
         val existedWords = legalWordRepository.findAllById(legalWordViews.map { it.id })
         if (existedWords.toSet().size != legalWordViews.toSet().size) {
@@ -99,7 +108,7 @@ class EncoderService(
             sequence, legalWordView -> LegalWord(
             sequence = sequence,
             content = legalWordView.content,
-            sensitiveWord=optionalSensitiveWord.get()
+            sensitiveWord=sensitiveWord
             )
         }
         val updatedWords = legalWordRepository.saveAll(words)
