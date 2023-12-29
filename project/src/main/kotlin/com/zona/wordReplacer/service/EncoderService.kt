@@ -58,6 +58,10 @@ class EncoderService(
         val sensitiveWord = findSensitiveWordById(sensitiveWordId)
         val contentSet = contents.toSet()
 
+        if (contentSet.size != contents.toList().size) {
+            throw IllegalArgumentException("Original contents contains duplicates")
+        }
+
         sensitiveWord.legalWords.forEach {
             if (it.content in contentSet) {
                 throw IllegalArgumentException("${it.content} already found in existing sensitive word: ${sensitiveWord.content}")
