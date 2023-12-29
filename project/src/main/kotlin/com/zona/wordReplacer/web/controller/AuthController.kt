@@ -1,4 +1,4 @@
-package com.zona.wordReplacer.controller
+package com.zona.wordReplacer.web.controller
 
 import com.zona.wordReplacer.entity.auth.MemberView
 import com.zona.wordReplacer.service.AuthService
@@ -26,7 +26,7 @@ class AuthController(
     val memberService: MemberService
 ) {
     @PostMapping("/login")
-    fun login(@RequestBody form: LoginForm, request: HttpServletRequest ,response: HttpServletResponse): Response<String> {
+    fun login(@RequestBody form: LoginForm, request: HttpServletRequest, response: HttpServletResponse): Response<String> {
         val targetCookie = request.cookies?.find {
             it.name == authService.KEY
         }

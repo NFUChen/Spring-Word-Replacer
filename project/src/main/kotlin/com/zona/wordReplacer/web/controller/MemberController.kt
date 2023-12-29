@@ -1,4 +1,4 @@
-package com.zona.wordReplacer.controller
+package com.zona.wordReplacer.web.controller
 
 import com.zona.wordReplacer.entity.auth.Member
 import com.zona.wordReplacer.entity.auth.MemberView

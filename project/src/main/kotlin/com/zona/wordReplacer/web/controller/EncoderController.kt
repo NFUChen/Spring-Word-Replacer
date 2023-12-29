@@ -1,4 +1,4 @@
-package com.zona.wordReplacer.controller
+package com.zona.wordReplacer.web.controller
 
 import com.zona.wordReplacer.service.EncoderRequest
 import com.zona.wordReplacer.service.EncoderService

@@ -1,6 +1,7 @@
 package com.zona.wordReplacer.service
 
 import com.zona.wordReplacer.entity.encoder.LegalWord
+import com.zona.wordReplacer.entity.encoder.LegalWordView
 import com.zona.wordReplacer.entity.encoder.SensitiveWord
 import com.zona.wordReplacer.repository.LegalWordRepository
 import com.zona.wordReplacer.repository.SensitiveWordRepository
@@ -40,13 +41,21 @@ class EncoderService(
         return legalWordRepository.findAll()
     }
 
-    fun addSensitiveWord(word: SensitiveWord): SensitiveWord {
+    fun addSensitiveWord(content: String): SensitiveWord {
+        val word = SensitiveWord(content)
         sensitiveWordRepository.save(word)
         return word
     }
 
-    fun addLegalWords(sensitiveWordId: UUID, legalWords: Iterable<LegalWord>): Iterable<LegalWord> {
+    fun addLegalWords(sensitiveWordId: UUID, contents: Iterable<String>): Iterable<LegalWord> {
+        // checking duplicates
+
+
         val sensitiveWord = findSensitiveWordById(sensitiveWordId)
+        val legalWords = contents.mapIndexed {
+            index: Int, content: String ->  LegalWord(sequence = index, content= content)
+        }
+
         legalWords.forEach {
             word -> word.sensitiveWord = sensitiveWord
         }
@@ -67,6 +76,36 @@ class EncoderService(
         legalWordFound.content = content
         legalWordRepository.save(legalWordFound)
         return legalWordFound
+    }
+
+    fun updateLegalWords(sensitiveWordId: UUID,legalWordViews: Iterable<LegalWordView>): Iterable<LegalWord> {
+        val optionalSensitiveWord = sensitiveWordRepository.findById(sensitiveWordId)
+        if (optionalSensitiveWord.isEmpty) {
+            throw IllegalArgumentException("Unable to find sensitive word: ${sensitiveWordId}")
+        }
+        val sensitiveWord = optionalSensitiveWord.get()
+
+        val existedWords = legalWordRepository.findAllById(legalWordViews.map { it.id })
+        if (existedWords.toSet().size != legalWordViews.toSet().size) {
+            throw IllegalArgumentException("Some elements in missing in existing words")
+        }
+
+
+
+
+        legalWordRepository.deleteAll(existedWords)
+
+        val words = legalWordViews.mapIndexed{
+            sequence, legalWordView -> LegalWord(
+            sequence = sequence,
+            content = legalWordView.content,
+            sensitiveWord=optionalSensitiveWord.get()
+            )
+        }
+        val updatedWords = legalWordRepository.saveAll(words)
+
+
+        return updatedWords
     }
 
     fun deleteSensitiveWordByIds(ids: Iterable<UUID>) {

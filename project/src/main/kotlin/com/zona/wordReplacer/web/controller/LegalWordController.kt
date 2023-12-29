@@ -1,4 +1,4 @@
-package com.zona.wordReplacer.controller
+package com.zona.wordReplacer.web.controller
 
 import com.zona.wordReplacer.entity.encoder.LegalWord
 import com.zona.wordReplacer.entity.encoder.LegalWordView
@@ -24,11 +24,15 @@ class LegalWordController(
         return Response(encoderService.findAllLegalWords())
     }
 
+    @PutMapping("/update_many/{id}")
+    fun updateMany(@PathVariable id: UUID, @RequestBody legalWordViews: Iterable<LegalWordView>): Response<Iterable<LegalWordView>> {
+        return Response(encoderService.updateLegalWords(id,legalWordViews).map { it.toView() })
+    }
 
 
     @PostMapping("/{id}")
-    fun post(@PathVariable id: UUID,@RequestBody legalWords: Iterable<LegalWord>): Response<Iterable<LegalWord>> {
-        val createdWord = encoderService.addLegalWords(id, legalWords )
+    fun post(@PathVariable id: UUID,@RequestBody contents: Iterable<String>): Response<Iterable<LegalWord>> {
+        val createdWord = encoderService.addLegalWords(id, contents)
         return Response(createdWord)
     }
 

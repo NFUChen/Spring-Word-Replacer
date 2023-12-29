@@ -10,10 +10,14 @@ data class LegalWordView(
 )
 
 @Entity
-@Table(name = "legal_word", uniqueConstraints = [
-    UniqueConstraint(columnNames = ["sensitive_word_id", "content"])
-])
+//@Table(name = "legal_word", uniqueConstraints = [
+//    UniqueConstraint(columnNames = ["sensitive_word_id", "content", "sequence"])
+//])
 class LegalWord(
+    @Column(name = "sequence", nullable = false)
+    var sequence: Int,
+
+
     @Column(name = "content", nullable = false, length = 255)
     var content: String,
 
@@ -30,5 +34,4 @@ class LegalWord(
         return LegalWordView(content, id)
     }
 }
-
 

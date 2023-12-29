@@ -7,7 +7,6 @@ class EncoderView(
     val isSensitiveWord: Boolean,
     val legalWords: ArrayList<LegalWordView> = arrayListOf()
 )
-
 data class EncoderRequest(
     val content: String
 )

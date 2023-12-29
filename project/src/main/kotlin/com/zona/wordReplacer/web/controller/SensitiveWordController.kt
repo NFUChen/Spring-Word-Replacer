@@ -1,4 +1,4 @@
-package com.zona.wordReplacer.controller
+package com.zona.wordReplacer.web.controller
 
 import com.zona.wordReplacer.entity.encoder.SensitiveWord
 import com.zona.wordReplacer.entity.encoder.SensitiveWordView
@@ -31,9 +31,9 @@ class SensitiveWordController(
     }
 
     @PostMapping("/")
-    fun post(@RequestBody sensitiveWord: SensitiveWord): Response<SensitiveWord> {
-        encoderService.addSensitiveWord(sensitiveWord)
-        return Response(sensitiveWord)
+    fun post(@RequestBody content: String): Response<SensitiveWord> {
+        val word = encoderService.addSensitiveWord(content)
+        return Response(word)
     }
 
     @PutMapping("/{id}")

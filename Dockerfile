@@ -5,7 +5,7 @@ WORKDIR /app
 
 COPY ./project .
 
-RUN cd /app && ./mvnw package
+RUN cd /app && ./mvnw clean package
 
 FROM openjdk:17.0-oracle
 
