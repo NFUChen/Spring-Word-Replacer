@@ -24,15 +24,10 @@ class LegalWordController(
         return Response(encoderService.findAllLegalWords())
     }
 
-    @PutMapping("/update_many/{id}")
-    fun updateMany(@PathVariable id: UUID, @RequestBody legalWordViews: Iterable<LegalWordView>): Response<Iterable<LegalWordView>> {
-        return Response(encoderService.updateLegalWords(id,legalWordViews).map { it.toView() })
-    }
-
 
     @PostMapping("/{id}")
     fun post(@PathVariable id: UUID,@RequestBody contents: Iterable<String>): Response<Iterable<LegalWord>> {
-        val createdWord = encoderService.addLegalWords(id, contents)
+        val createdWord = encoderService.saveLegalWords(id, contents)
         return Response(createdWord)
     }
 

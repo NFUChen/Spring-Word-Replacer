@@ -1,13 +1,13 @@
 package com.zona.wordReplacer.service
 
 import com.zona.wordReplacer.entity.encoder.LegalWord
-import com.zona.wordReplacer.entity.encoder.LegalWordView
 import com.zona.wordReplacer.entity.encoder.SensitiveWord
 import com.zona.wordReplacer.repository.LegalWordRepository
 import com.zona.wordReplacer.repository.SensitiveWordRepository
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.util.UUID
+import java.util.*
 
 @Transactional
 @Service
@@ -15,6 +15,7 @@ class EncoderService(
     val sensitiveWordRepository: SensitiveWordRepository,
     val legalWordRepository: LegalWordRepository
 ) {
+    val logger = LoggerFactory.getLogger(this::class.java)
     fun findSensitiveWordById(sensitiveWordId: UUID): SensitiveWord {
         val optinalSensitiveWord = sensitiveWordRepository.findById(sensitiveWordId)
         if (!optinalSensitiveWord.isPresent) {
@@ -54,30 +55,36 @@ class EncoderService(
         return word
     }
 
-    fun addLegalWords(sensitiveWordId: UUID, contents: Iterable<String>): Iterable<LegalWord> {
-        val sensitiveWord = findSensitiveWordById(sensitiveWordId)
+    fun saveLegalWords(sensitiveWordId: UUID, contents: Iterable<String>): Iterable<LegalWord> {
+
         val contentSet = contents.toSet()
 
         if (contentSet.size != contents.toList().size) {
-            throw IllegalArgumentException("Original contents: ${contents} contain duplicates")
-        }
-
-        sensitiveWord.legalWords.forEach {
-            if (it.content in contentSet) {
-                throw IllegalArgumentException("${it.content} already found in existing sensitive word: ${sensitiveWord.content}")
-            }
+            throw IllegalArgumentException("Original contents: $contents contain duplicates")
         }
 
 
-        val legalWords = contents.mapIndexed {
+        val sensitiveWord = findSensitiveWordById(sensitiveWordId)
+        val deletedWordId = sensitiveWord.legalWords.map { it.id }
+
+
+
+        val updatedLegalWords = contents.mapIndexed {
             index: Int, content: String ->  LegalWord(sequence = index, content= content)
         }
 
-        legalWords.forEach {
+        updatedLegalWords.forEach {
             word -> word.sensitiveWord = sensitiveWord
         }
-        legalWordRepository.saveAll(legalWords)
-        return legalWords
+
+        sensitiveWord.legalWords = updatedLegalWords.toMutableList()
+        sensitiveWordRepository.save(sensitiveWord)
+
+        legalWordRepository.deleteAllById(deletedWordId)
+        logger.info("Delete legal words: $deletedWordId")
+
+
+        return sensitiveWord.legalWords
     }
 
     fun updateSensitiveWordContent(sensitiveWordId: UUID, content: String): SensitiveWord {
@@ -93,32 +100,6 @@ class EncoderService(
         legalWordFound.content = content
         legalWordRepository.save(legalWordFound)
         return legalWordFound
-    }
-
-    fun updateLegalWords(sensitiveWordId: UUID,legalWordViews: Iterable<LegalWordView>): Iterable<LegalWord> {
-       val sensitiveWord = findSensitiveWordById(sensitiveWordId)
-
-        val existedWords = legalWordRepository.findAllById(legalWordViews.map { it.id })
-        if (existedWords.toSet().size != legalWordViews.toSet().size) {
-            throw IllegalArgumentException("Some elements in missing in existing words")
-        }
-
-
-
-
-        legalWordRepository.deleteAll(existedWords)
-
-        val words = legalWordViews.mapIndexed{
-            sequence, legalWordView -> LegalWord(
-            sequence = sequence,
-            content = legalWordView.content,
-            sensitiveWord=sensitiveWord
-            )
-        }
-        val updatedWords = legalWordRepository.saveAll(words)
-
-
-        return updatedWords
     }
 
     fun deleteSensitiveWordByIds(ids: Iterable<UUID>) {
