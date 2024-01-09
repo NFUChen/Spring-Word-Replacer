@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 
+data class PasswordRequest(val password: String)
+
 @RestController
 @RequestMapping("/api/admin/members")
 class MemberController(
@@ -39,11 +41,13 @@ class MemberController(
     }
 
     @PutMapping("/roles/{id}")
-    fun updateMemberRoles(@PathVariable id: Long,  @RequestBody roleString: String): Response<MemberView> {
+    fun updateMemberRoles(@PathVariable id: Long,  @RequestBody roles: Iterable<String>): Response<MemberView> {
+
+
         return Response(
             memberService.updateMemberRolesById(
                 id,
-                listOf(roleString)
+                roles
             ).toView(),
             HttpStatus.ACCEPTED
         )
@@ -52,6 +56,16 @@ class MemberController(
     @GetMapping("/roles")
     fun getAllRoles(): Response<Iterable<String>> {
         return Response(memberService.getAllRoles())
+    }
+
+    @GetMapping("/activate/{id}")
+    fun activateMember(@PathVariable("id") memberId: Long) {
+        memberService.activateMemberById(memberId)
+    }
+
+    @GetMapping("/deactivate/{id}")
+    fun deactivateMember(@PathVariable("id") memberId: Long) {
+        memberService.deactivateMemberById(memberId)
     }
 }
 
@@ -70,9 +84,9 @@ class PersonalMemberController(
         )
     }
     @PutMapping("/password/{memberId}")
-    fun updatePassword(@PathVariable memberId: Long, @RequestBody password: String, @CookieValue(value= "JSID", required = true) cookieValue: String): Response<String> {
+    fun updatePassword(@PathVariable memberId: Long, @RequestBody passwordRequest: PasswordRequest, @CookieValue(value= "JSID", required = true) cookieValue: String): Response<String> {
         throwIfNotSelf(cookieValue, memberId)
-        memberService.setMemberPassword(memberId, password)
+        memberService.setMemberPassword(memberId, passwordRequest.password)
         return Response("Update password successfully")
     }
 

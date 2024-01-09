@@ -19,7 +19,7 @@ class MemberService(
 ) {
 
     fun findAllMembers(): Iterable<Member> {
-        return memberRepository.findAll()
+        return memberRepository.findAll().filter { !it.isRole(UserRole.ADMIN) }
     }
 
     fun findMemberById(id: Long): Member {
@@ -60,11 +60,19 @@ class MemberService(
     }
 
     fun updateMemberRolesById(memberId: Long, roleStrings: Iterable<String>): Member {
-        roleRepository.deleteByMemberId(memberId)
-
         val userRoles = roleStrings.map {
             UserRole.fromString(it)
         }
+
+        if (UserRole.ADMIN in userRoles) {
+            throw UnsupportedOperationException("Promote admin user role via API is not allowed")
+        }
+
+        roleRepository.deleteByMemberId(memberId)
+
+
+
+
         val member = findMemberById(memberId)
         val roles = userRoles.map {
             Role(it.roleName, member)
@@ -82,7 +90,7 @@ class MemberService(
     }
 
     fun getAllRoles(): Iterable<String> {
-        return UserRole.values().toSet().map {
+        return UserRole.values().filter { it != UserRole.ADMIN }.toSet().map {
             it.toString()
         }
     }
@@ -90,6 +98,27 @@ class MemberService(
         val memberFound = findMemberById(memberId)
         memberFound.password = authService.encodePassword(newPassword)
         memberRepository.save(memberFound)
+    }
+
+    fun activateMemberById(memberId: Long): MemberView {
+        val member = findMemberById(memberId)
+
+        member.isActivated = true
+        memberRepository.save(member)
+
+        return member.toView()
+    }
+
+    fun deactivateMemberById(memberId: Long): MemberView {
+        val member = findMemberById(memberId)
+
+        member.isActivated = false
+        memberRepository.save(member)
+
+        return member.toView()
+
+
+
     }
 
 }

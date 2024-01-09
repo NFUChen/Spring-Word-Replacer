@@ -2,6 +2,7 @@ package com.zona.wordReplacer.web.controller
 
 import com.zona.wordReplacer.entity.encoder.SensitiveWord
 import com.zona.wordReplacer.entity.encoder.SensitiveWordView
+import com.zona.wordReplacer.entity.encoder.WordView
 import com.zona.wordReplacer.service.EncoderService
 import com.zona.wordReplacer.web.Response
 import org.springframework.http.HttpStatus
@@ -31,8 +32,8 @@ class SensitiveWordController(
     }
 
     @PostMapping("/")
-    fun post(@RequestBody content: String): Response<SensitiveWord> {
-        val word = encoderService.addSensitiveWord(content)
+    fun post(@RequestBody wordView: WordView): Response<SensitiveWord> {
+        val word = encoderService.addSensitiveWord(wordView.content)
         return Response(word)
     }
 

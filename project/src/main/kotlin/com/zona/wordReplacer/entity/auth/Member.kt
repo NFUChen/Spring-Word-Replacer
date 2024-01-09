@@ -20,6 +20,9 @@ class Member(
     @Column(name = "password", columnDefinition = "VARCHAR(68)", nullable = false)
     var password: String?,
 
+    @Column(name = "is_activated")
+    var isActivated: Boolean = false,
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id", nullable = false)

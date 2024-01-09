@@ -71,8 +71,8 @@ class AuthService(
         return sessionPool.get(sessionId) ?: throw IllegalArgumentException("Session ID: $sessionId not found")
     }
 
-    fun isSelf(sessionId: String, chckedMemberId: Long): Boolean {
-        return getMemberId(sessionId) == chckedMemberId
+    fun isSelf(sessionId: String, checkedMemberId: Long): Boolean {
+        return getMemberId(sessionId) == checkedMemberId
     }
 
 

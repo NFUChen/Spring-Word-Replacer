@@ -23,7 +23,7 @@ class CommandLineRunner(
 	override fun run(vararg args: String?) {
 		// Your code to be executed on application startup
 		val memberView = memberService.signUpNewMember(
-			Member("admin", "admin@admin.com", "")
+			Member("admin", "admin@admin.com", "", true)
 		)
 
 		memberService.setMemberPassword(memberView.memberId ?: 1, "zonazona-admin")
