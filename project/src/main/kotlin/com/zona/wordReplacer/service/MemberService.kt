@@ -64,9 +64,6 @@ class MemberService(
             UserRole.fromString(it)
         }
 
-        if (UserRole.ADMIN in userRoles) {
-            throw UnsupportedOperationException("Promote admin user role via API is not allowed")
-        }
 
         roleRepository.deleteByMemberId(memberId)
 
