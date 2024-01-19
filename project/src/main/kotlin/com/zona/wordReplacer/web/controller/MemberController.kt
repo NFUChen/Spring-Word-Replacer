@@ -23,14 +23,14 @@ data class PasswordRequest(val password: String)
 class MemberController(
     val memberService: MemberService
 ) {
-    @GetMapping("/")
+    @GetMapping
     fun findAllMembers(): Response<Iterable<MemberView>> {
         return Response(memberService.findAllMembers().map {
             it.toView()
         })
     }
 
-    @PostMapping("/")
+    @PostMapping
     fun signUpNewMember(@RequestBody newMember: Member): Response<MemberView> {
 
         memberService.signUpNewMember(newMember)

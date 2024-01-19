@@ -19,7 +19,7 @@ class LegalWordController(
         return Response(encoderService.findAllLegalWords().map { it.toView() })
     }
 
-    @GetMapping("/")
+    @GetMapping
     fun get(): Response<Iterable<LegalWord>> {
         return Response(encoderService.findAllLegalWords())
     }

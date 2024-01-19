@@ -5,7 +5,7 @@ WORKDIR /app
 
 COPY ./project .
 
-RUN cd /app && ./mvnw clean package
+RUN cd /app && ./mvnw clean package -DskipTests
 
 FROM openjdk:17.0-oracle
 

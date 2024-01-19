@@ -26,12 +26,12 @@ class SensitiveWordController(
         return Response(encoderService.findAllSensitiveWords().map { it.toView() })
     }
 
-    @GetMapping("/")
+    @GetMapping
     fun get(): Response<Iterable<SensitiveWord>> {
         return Response(encoderService.findAllSensitiveWords())
     }
 
-    @PostMapping("/")
+    @PostMapping
     fun post(@RequestBody wordView: WordView): Response<SensitiveWord> {
         val word = encoderService.addSensitiveWord(wordView.content)
         return Response(word)

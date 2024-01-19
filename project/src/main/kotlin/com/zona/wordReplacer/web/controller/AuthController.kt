@@ -1,5 +1,6 @@
 package com.zona.wordReplacer.web.controller
 
+import com.zona.wordReplacer.entity.auth.Member
 import com.zona.wordReplacer.entity.auth.MemberView
 import com.zona.wordReplacer.service.AuthService
 import com.zona.wordReplacer.service.MemberService
@@ -25,14 +26,19 @@ class AuthController(
     val authService: AuthService,
     val memberService: MemberService
 ) {
-    @PostMapping("/login")
-    fun login(@RequestBody form: LoginForm, request: HttpServletRequest, response: HttpServletResponse): Response<String> {
+    @PostMapping("/public/login")
+    fun login(@RequestBody form: LoginForm, request: HttpServletRequest, response: HttpServletResponse): Response<MemberView> {
         val targetCookie = request.cookies?.find {
             it.name == authService.KEY
         }
-        if (authService.isValidSessionId(targetCookie?.value ?: "")) {
-            return Response("Already login", HttpStatus.ACCEPTED)
+
+        val cookieSid = targetCookie?.value ?: ""
+        if (authService.isValidSessionId(cookieSid)) {
+            val memberId = authService.getMemberId(cookieSid)
+
+            return Response(memberService.findMemberById(memberId).toView(), HttpStatus.ACCEPTED)
         }
+
         val sid = authService.login(
             form.email, form.password
         )
@@ -41,7 +47,19 @@ class AuthController(
         response.addCookie(
             cookie
         )
-        return Response("Login successfully", HttpStatus.ACCEPTED)
+        val memberId = authService.getMemberId(sid)
+
+        return Response(memberService.findMemberById(memberId).toView(), HttpStatus.ACCEPTED)
+    }
+
+    @PostMapping("/public/signup")
+    fun signUpNewMember(@RequestBody newMember: Member): Response<MemberView> {
+
+        memberService.signUpNewMember(newMember)
+        return Response(
+            newMember.toView(),
+            HttpStatus.CREATED
+        )
     }
 
     @GetMapping("/logout")
@@ -64,6 +82,8 @@ class AuthController(
         val member = memberService.findMemberById(memberId)
         return Response(member.toView())
     }
+
+
 
 
 

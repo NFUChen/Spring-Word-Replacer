@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 
 
 @RestController
-@RequestMapping("/api/public/encoder")
+@RequestMapping("/api/encoder")
 class EncoderController(
     val encoderService: EncoderService
 ) {

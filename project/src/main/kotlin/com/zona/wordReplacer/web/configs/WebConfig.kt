@@ -17,7 +17,7 @@ class WebConfig(
 ): WebMvcConfigurer {
     override fun addInterceptors(registry: InterceptorRegistry) {
         registry.addInterceptor(LoggingInterceptor())
-        registry.addInterceptor(AuthInterceptor(authService)).excludePathPatterns("/api/login")
+        registry.addInterceptor(AuthInterceptor(authService)).excludePathPatterns("/api/public/**")
         registry.addInterceptor(AdminRouteInterceptor(authService, memberService)).addPathPatterns("/api/admin/**")
 
 
