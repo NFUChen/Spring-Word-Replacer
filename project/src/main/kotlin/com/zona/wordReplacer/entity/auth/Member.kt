@@ -13,7 +13,7 @@ data class MemberView(
 @Entity
 @Table(name = "member")
 class Member(
-    @Column(name = "name", unique = true, nullable = false)
+    @Column(name = "name", nullable = false)
     var name: String?,
     @Column(name = "email", unique =  true, nullable = false)
     var email: String?,

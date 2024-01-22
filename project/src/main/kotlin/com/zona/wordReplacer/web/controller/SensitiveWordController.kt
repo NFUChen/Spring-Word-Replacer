@@ -43,7 +43,7 @@ class SensitiveWordController(
         return Response(updatedWord)
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping
     fun delete(@RequestBody ids: Iterable<UUID>): Response<String> {
         encoderService.deleteSensitiveWordByIds(ids)
         return Response("Successfully delete sensitive words: $ids", HttpStatus.ACCEPTED)
