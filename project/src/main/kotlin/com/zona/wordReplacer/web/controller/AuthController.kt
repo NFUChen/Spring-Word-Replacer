@@ -44,6 +44,7 @@ class AuthController(
         )
         val cookie = Cookie(authService.KEY, sid)
         cookie.maxAge = 24 * 3600
+        cookie.path = "/"
         response.addCookie(
             cookie
         )
