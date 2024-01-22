@@ -1,5 +1,6 @@
 package com.zona.wordReplacer.service
 
+import com.zona.wordReplacer.entity.auth.Member
 import com.zona.wordReplacer.entity.encoder.LegalWord
 import com.zona.wordReplacer.entity.encoder.SensitiveWord
 import com.zona.wordReplacer.repository.LegalWordRepository
@@ -110,7 +111,7 @@ class EncoderService(
         return legalWordRepository.deleteAllById(ids)
     }
 
-    fun encode(content: String): ArrayList<EncoderView> {
+    fun encode(content: String, member: Member): ArrayList<EncoderView> {
         val sensitiveWordViews = sensitiveWordRepository.findAll().map { it.toView() }
         return Encoder(sensitiveWordViews).encode(content)
     }
