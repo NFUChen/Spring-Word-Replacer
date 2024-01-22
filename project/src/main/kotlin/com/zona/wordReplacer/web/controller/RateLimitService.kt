@@ -21,7 +21,7 @@ class RateLimitService {
     }
 
     fun isLimited(member: Member): Boolean {
-        return (rateLimitMap[member.id] ?: 0) >= MAX_TRIAL
+        return (rateLimitMap[member.id] ?: 0) >= MAX_TRIAL && member.isRole(UserRole.GUEST)
     }
 
     fun getRemainingCount(member: Member): Int {
