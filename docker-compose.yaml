@@ -1,6 +1,7 @@
 version: '3.3'
 services:
   word-replacer:
+    image: wichen1214/word-replacer
     container_name: word-replacer
     restart: always
     ports:
