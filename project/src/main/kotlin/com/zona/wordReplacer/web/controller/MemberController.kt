@@ -2,6 +2,7 @@ package com.zona.wordReplacer.web.controller
 
 import com.zona.wordReplacer.entity.auth.Member
 import com.zona.wordReplacer.entity.auth.MemberView
+import com.zona.wordReplacer.entity.auth.UserRole
 import com.zona.wordReplacer.service.AuthService
 import com.zona.wordReplacer.service.MemberService
 import com.zona.wordReplacer.web.Response
@@ -39,13 +40,22 @@ class MemberController(
             HttpStatus.CREATED
         )
     }
+    @PostMapping("/admin_member")
+    fun signUpNewAdminMember(@RequestBody newMember: Member): Response<MemberView> {
+        val memberView = memberService.signUpNewMember(newMember)
+        val updatedAdminMember = memberService.updateMemberRolesById(memberView.memberId ?: 1, arrayListOf(
+            UserRole.ADMIN
+        ))
+
+        return Response(updatedAdminMember.toView())
+    }
 
     @PutMapping("/roles/{id}")
     fun updateMemberRoles(@PathVariable id: Long,  @RequestBody roles: Iterable<String>): Response<MemberView> {
 
 
         return Response(
-            memberService.updateMemberRolesById(
+            memberService.updateMemberRolesStringById(
                 id,
                 roles
             ).toView(),

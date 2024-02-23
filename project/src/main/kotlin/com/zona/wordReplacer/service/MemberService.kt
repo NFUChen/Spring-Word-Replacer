@@ -59,16 +59,9 @@ class MemberService(
         return member
     }
 
-    fun updateMemberRolesById(memberId: Long, roleStrings: Iterable<String>): Member {
-        val userRoles = roleStrings.map {
-            UserRole.fromString(it)
-        }
-
+    fun updateMemberRolesById(memberId: Long, userRoles: Iterable<UserRole>): Member {
 
         roleRepository.deleteByMemberId(memberId)
-
-
-
 
         val member = findMemberById(memberId)
         val roles = userRoles.map {
@@ -77,6 +70,13 @@ class MemberService(
         roleRepository.saveAll(roles)
         member.roles = roles.toMutableList()
         return member
+    }
+
+    fun updateMemberRolesStringById(memberId: Long, roleStrings: Iterable<String>): Member {
+        val userRoles = roleStrings.map {
+            UserRole.fromString(it)
+        }
+        return updateMemberRolesById(memberId, userRoles)
     }
 
     fun isMemberExistByEmail(email: String?): Boolean {
